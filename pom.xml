@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.huemulsolutions.bigdata</groupId>
+  <artifactId>huemul_sql_decode</artifactId>
+  <version>1.0</version>
+  <name>huemul_sql_decode</name>
+  <description>Obtiene los campos y tablas utilizados en una sentencia SQL. Dada la siguiente consulta:description
+  select campo1 as Id, campo2 as descripcion from Tabla_datos
+  
+  retorna un arregla con Id (obtenido desde campo1 de tabla "tabla_datos"), Descripcion (obtenido desde campo2 de tabla "tabla_datos")
+  
+  </description>
+  <url>http://www.HuemulSolutions.com</url>
+  <inceptionYear>2018</inceptionYear>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
+  <developers>
+    <developer>
+      <name>Sebastián Rodríguez Robotham</name>
+      <email>sebas_rod@hotmail.com</email>
+      <organization>Huemul Solutions</organization>
+      <organizationUrl>http://www.HuemulSolutions.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Developer Code</name>
+      <email>developer.code@HuemulSolutions.com</email>
+      <organization>Huemul Solutions</organization>
+      <organizationUrl>http://www.HuemulSolutions.com</organizationUrl>
+    </developer>
+  </developers>
+  
+  <distributionManagement>
+	  <snapshotRepository>
+	    <id>ossrh</id>
+	    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	  </snapshotRepository>
+	  <repository>
+	    <id>ossrh</id>
+	    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+	  </repository>
+	</distributionManagement>
+  
+  
+  <scm>
+    <connection>https://github.com/HuemulSolutions/huemul_sql_decode.git</connection>
+    <developerConnection>https://github.com/HuemulSolutions/huemul_sql_decode.git</developerConnection>
+    <url>https://github.com/HuemulSolutions/huemul_sql_decode</url>
+   </scm>
+</project>
