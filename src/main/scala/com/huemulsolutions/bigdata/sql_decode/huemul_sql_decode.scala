@@ -23,6 +23,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
   Symbols_joins.append("LEFT")
   Symbols_joins.append("RIGHT")
   Symbols_joins.append("FULL")
+  Symbols_joins.append("JOIN")
   
   val Symbols: ArrayBuffer[String] = new ArrayBuffer[String] 
   Symbols.append("+")
@@ -509,6 +510,9 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
           x.database_name = tabRes(0).database_name
       }
       
+      if (x.tableAlias_name == null)
+        x.tableAlias_name = x.table_name
+      
       //println(s"database_name: [${x.database_name}], table_Name: [${x.table_name}], alias: [${x.tableAlias_name}]")
       }
     
@@ -642,7 +646,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     position = 0
     var position_max: Int = localWords.length
     while (position < position_max) {
-      val word: String = localWords(position).getsymbol.toUpperCase()
+      var word: String = localWords(position).getsymbol.toUpperCase()
       
       //Get current word, previous word and next word
       var word_next: String = null
@@ -861,7 +865,14 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                   
                   //Get next position
                   if (position+2 < position_max) {
-                    table_from.table_name = localWords(position+2).getsymbol.toUpperCase()
+                    word_prev = localWords(position+1).getsymbol.toUpperCase()
+                    word = localWords(position+2).getsymbol.toUpperCase()
+                    if (position+3 < position_max) 
+                      word_next = localWords(position+3).getsymbol.toUpperCase()
+                    else
+                      word_next = null
+                    
+                    table_from.table_name = word
                     position += 2
                   }
                 } else {
@@ -874,14 +885,19 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 }
                     
                 if (   word_last == "ON" 
-                    || word_last == ","
+                    || word_last == "," 
                     || Symbols_joins.filter { x => word_last != null && x.toUpperCase() == word_last.toUpperCase() }.length > 0
                     ) {
                   table_from.tableAlias_name = table_from.table_name
-                  position += 1 
+                  
+                  if (word_last != null)
+                    position += 1  
+                } else if (word_next != null && word_next.toUpperCase() == "AS") {
+                  table_from.tableAlias_name = word_last
                 } else {
-                 table_from.tableAlias_name = word_last
-                 position += 1
+                 table_from.tableAlias_name = word_next
+                 if (word_last != null)
+                   position += 1
                 }
                    
                 Result.tables.append(table_from)
