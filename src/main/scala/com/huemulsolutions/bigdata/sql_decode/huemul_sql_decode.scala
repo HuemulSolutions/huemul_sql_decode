@@ -503,9 +503,12 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
   private def Analyze_SQL_CloseFROM (decode_result: huemul_sql_decode_result, TablesAndColumns: ArrayBuffer[huemul_sql_tables_and_columns], position_start: Int, position_end: Int, SQL: String ): huemul_sql_decode_result = {
     decode_result.from_sql = SQL.substring(position_start, position_end) 
     
-    decode_result.tables.foreach { x => 
+    var textTables: String = ""
+    var localTablesAndColumns: ArrayBuffer[huemul_sql_tables_and_columns] = new ArrayBuffer[huemul_sql_tables_and_columns]()
+    decode_result.tables.foreach { x =>
+      
       if (x.database_name == null) {
-        val tabRes = TablesAndColumns.filter { y => y.table_name != null && y.table_name.toUpperCase() == x.table_name.toUpperCase()  }
+        val tabRes = TablesAndColumns.filter { y => y.table_name != null && y.table_name.toUpperCase() == x.table_name.toUpperCase()  }  
         if (tabRes.length > 0)
           x.database_name = tabRes(0).database_name
       }
@@ -513,49 +516,95 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       if (x.tableAlias_name == null)
         x.tableAlias_name = x.table_name
       
-      //println(s"database_name: [${x.database_name}], table_Name: [${x.table_name}], alias: [${x.tableAlias_name}]")
+      val dbandtable = s"[${x.database_name}.${x.table_name}]"
+      if (!textTables.contains(dbandtable)){
+        localTablesAndColumns = localTablesAndColumns ++ TablesAndColumns.filter { y => y.table_name.toUpperCase() == x.table_name.toUpperCase() && y.database_name.toUpperCase() == x.database_name.toUpperCase()  }  
+        textTables = textTables.concat(dbandtable)
       }
+      //println(s"database_name: [${x.database_name}], table_Name: [${x.table_name}], alias: [${x.tableAlias_name}]")  
+    }
     
     //println ("*** columns")
     decode_result.columns.foreach { x => 
       //println(s"name: [${x.column_name}] sql: [${x.column_sql}] ")
-      
-      x.column_origin.foreach { y_col_orig =>
-        //complete database & Table information)
-        if (y_col_orig.trace_database_name == null) {          
-          //Search for table trace 
-          //                                     alias found in "SELECT" sentence              alias of table equal to alias referece in column              
-          val RegFound = decode_result.tables.filter { z_tab1 => y_col_orig.trace_tableAlias_name != null  && z_tab1.tableAlias_name.toUpperCase() == y_col_orig.trace_tableAlias_name.toUpperCase() }
-          if (RegFound.length == 1) {
-            //get tables information of "FROM" sentence
-            y_col_orig.trace_table_name = RegFound(0).table_name
-            y_col_orig.trace_database_name= RegFound(0).database_name
-            y_col_orig.trace_tableAlias_name = RegFound(0).tableAlias_name
-          } else {              
-            //if not found with self query, search in param TablesAndColumns (all columns & tables)
-            val ResColAndTable = TablesAndColumns.filter { z_table => z_table.column_name.toUpperCase() ==  y_col_orig.trace_column_name.toUpperCase() }
+      if (x.column_name == null && x.column_sql == "*") {
+        //get "select *, add all columns origin from all tables or alias specify
+        localTablesAndColumns.foreach { x_newcolums =>
+          val localDB = decode_result.tables.filter { x_tables => x_newcolums.table_name.toUpperCase() == x_tables.table_name.toUpperCase() && x_newcolums.database_name.toUpperCase() == x_tables.database_name.toUpperCase() }
+          var localAliasName: String = null
+          if (localDB.length > 0) 
+            localAliasName = localDB(0).tableAlias_name
             
-            //search table name of column found in "FROM" table list  
-            var isFound: Boolean = false
-            ResColAndTable.foreach { z_table2 => 
-              val tabFound = decode_result.tables.filter { a_tabfrom => a_tabfrom.table_name.toUpperCase() == z_table2.table_name.toUpperCase() }
-              if (tabFound.length == 1){
-                isFound = true
-                y_col_orig.trace_table_name = z_table2.table_name
-                y_col_orig.trace_database_name = z_table2.database_name
-                y_col_orig.trace_tableAlias_name = z_table2.table_name
+          val addCol = new huemul_sql_columns()
+          addCol.column_name = x_newcolums.column_name
+          addCol.column_sql = x_newcolums.column_name.concat(" --added automatically by huemul")
+          val addcolumn_origin = new huemul_sql_columns_origin()
+          addcolumn_origin.trace_column_name = x_newcolums.column_name
+          addcolumn_origin.trace_database_name = x_newcolums.database_name
+          addcolumn_origin.trace_table_name = x_newcolums.table_name
+          addcolumn_origin.trace_tableAlias_name = if (localAliasName == null) x_newcolums.table_name else localAliasName
+          addCol.column_origin.append(addcolumn_origin)
+          decode_result.columns.append(addCol)
+        }
+      } else if (x.column_name == null && x.column_origin.length == 1 && x.column_origin(0).trace_column_name == "*") {
+        //get database & table names
+        val localDB = decode_result.tables.filter { x_tables => x_tables.tableAlias_name.toUpperCase() == x.column_origin(0).trace_tableAlias_name.toUpperCase()}
+        if (localDB.length > 0) {
+          //filter table from localtables
+          val newColumns = localTablesAndColumns.filter { x_localcols => x_localcols.table_name.toUpperCase() == localDB(0).table_name.toUpperCase() && x_localcols.database_name.toUpperCase() == localDB(0).database_name.toUpperCase() }
+          
+          newColumns.foreach { x_newcolums =>
+            val addCol = new huemul_sql_columns()
+            addCol.column_name = x_newcolums.column_name
+            addCol.column_sql = x_newcolums.column_name.concat(" --added automatically by huemul")
+            val addcolumn_origin = new huemul_sql_columns_origin()
+            addcolumn_origin.trace_column_name = x_newcolums.column_name
+            addcolumn_origin.trace_database_name = x_newcolums.database_name
+            addcolumn_origin.trace_table_name = x_newcolums.table_name
+            addcolumn_origin.trace_tableAlias_name = localDB(0).tableAlias_name
+            addCol.column_origin.append(addcolumn_origin)
+            decode_result.columns.append(addCol) 
+          }           
+        }
+      } else {
+      
+        x.column_origin.foreach { y_col_orig =>
+          //complete database & Table information)
+          if (y_col_orig.trace_database_name == null) {          
+            //Search for table trace 
+            //                                     alias found in "SELECT" sentence              alias of table equal to alias referece in column              
+            val RegFound = decode_result.tables.filter { z_tab1 => y_col_orig.trace_tableAlias_name != null  && z_tab1.tableAlias_name.toUpperCase() == y_col_orig.trace_tableAlias_name.toUpperCase() }
+            if (RegFound.length == 1) {
+              //get tables information of "FROM" sentence
+              y_col_orig.trace_table_name = RegFound(0).table_name
+              y_col_orig.trace_database_name= RegFound(0).database_name
+              y_col_orig.trace_tableAlias_name = RegFound(0).tableAlias_name
+            } else {              
+              //if not found with self query, search in param TablesAndColumns (all columns & tables)
+              val ResColAndTable = TablesAndColumns.filter { z_table => z_table.column_name != null && z_table.column_name.toUpperCase() ==  y_col_orig.trace_column_name.toUpperCase() }
+              
+              //search table name of column found in "FROM" table list  
+              var isFound: Boolean = false
+              ResColAndTable.foreach { z_table2 => 
+                val tabFound = decode_result.tables.filter { a_tabfrom => a_tabfrom.table_name.toUpperCase() == z_table2.table_name.toUpperCase() }
+                if (tabFound.length == 1){
+                  isFound = true
+                  y_col_orig.trace_table_name = z_table2.table_name
+                  y_col_orig.trace_database_name = z_table2.database_name
+                  y_col_orig.trace_tableAlias_name = z_table2.table_name
+                }
+              }
+              
+              if (!isFound){
+                y_col_orig.trace_table_name = null //UNKNOWN
+                y_col_orig.trace_database_name = null //UNKNOWN
               }
             }
-            
-            if (!isFound){
-              y_col_orig.trace_table_name = null //UNKNOWN
-              y_col_orig.trace_database_name = null //UNKNOWN
-            }
           }
+         
         }
-       
       }
-      
+        
       //println("final")
       //x.column_origin.foreach { y => println(s"[${y.trace_tableAlias_name}].[${y.trace_column_name}]   trace_table_name:${y.trace_table_name} database:${y.trace_database_name}")}
       }
@@ -637,6 +686,8 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     val Symbols_adhoc = Symbols.filter { x => x != "." }
     val search_end_text: ArrayBuffer[String] = new ArrayBuffer[String]() 
     var CanProcess: Boolean = true
+    var parenthesis: Int = 0
+    var numOfWords: Int = 0
     
     //Drop commented lines with --
     val localWords = Analyze_SQL_RemoveComments(p_words)
@@ -660,6 +711,8 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         //try to determine stage
         if (stage == null) {
           if (word == "SELECT") {
+            if (word_next == "DISTINCT")
+              position += 1
             stage = "SELECT"
             substage = null
           }
@@ -739,13 +792,19 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
           
           //looking for field}
           if (stage == "SELECT" && substage == "COLUMN") {
-            
+            //search for "(" and ")"
+            if (word == "(")
+              parenthesis += 1
+            else if (word == ")")
+              parenthesis -= 1
+                        
             if (word == "(" && word_next == "SELECT") {
               SentenceIsFound = true
               val res_sel = get_select_on_select(position, position_max, SQL, localWords, TablesAndColumns)
               
               position = res_sel.position
               select_on_select = res_sel.select_on_select
+              numOfWords += 2
             }
             
             //search for sql functions
@@ -754,6 +813,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               if (use_function.length > 0) {
                 SentenceIsFound = true
                 cols_functions.append(word)
+                numOfWords += 1
               } 
             }
               
@@ -770,12 +830,15 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               val _Symbols_user = Symbols_user.filter { x => x.toUpperCase() == word.toUpperCase() }
               if (_Symbols_user.length > 0) {
                 SentenceIsFound = true
+                numOfWords += 1
               }
             }
              
             //end of columns (ex: select  table.field as myField, table.field2 as myfield2 FROM
             //                                                 ---                         ---
-            if (search_end_bool == false && position_sql_begin > 0 && (word_next == "," || word_next == "FROM") ) {
+            if (search_end_bool == false && position_sql_begin > 0 && (   (word_next == "," && parenthesis == 0) 
+                                                                        || word_next == "FROM"
+                                                                       )) {
               var colName: String = ""
               if (SentenceIsFound)
                 colName = null
@@ -783,7 +846,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 colName = word
                 
               //if word is the column name and alias at the same time (for example "select column from table"), then add column origin
-              if (column.column_origin.length == 0) {
+              if (column.column_origin.length == 0 && numOfWords == 1) {
                 val new_reg =  new huemul_sql_columns_origin()
                 new_reg.trace_column_name = word
                 column.column_origin.append(new_reg)
@@ -811,10 +874,12 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               new_reg.trace_column_name = word_next
               new_reg.trace_tableAlias_name = word_prev
               column.column_origin.append(new_reg)
-            } else if (SentenceIsFound == false && search_end_bool == false && (word != "." && word_next != "." && word_prev != ".") && Try(word.toDouble).isFailure ) {
+              numOfWords += 1
+            } else if (SentenceIsFound == false && search_end_bool == false && (word != "." && word_next != "." && word_prev != ".") && Try(word.toDouble).isFailure) {
               val new_reg =  new huemul_sql_columns_origin()
               new_reg.trace_column_name = word
               column.column_origin.append(new_reg)
+              numOfWords += 1
             }
           } else if (stage == "FROM") {
           /*****************************************************************************************************/

@@ -97,9 +97,9 @@ object App {
                        
     
     val resfinal = sql_dec.decodeSQL(
-    """SELECT teams.conference,
-       sub.*
-  FROM (
+    """SELECT distinct teams.conference,otro,sum(uno,10,conference) sumato, count(*) as cantidad,
+       t3.*
+  FROM tabla_3 t3, (
         SELECT players.school_name,
                COUNT(*) AS players
           FROM benn.college_football_players players
