@@ -67,7 +67,7 @@ object App {
     //sql_dec.decode("""SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo1 = campo_1_orig""", TabAndCols)
     
     /*
-    val resfinal = sql_dec.decodeSQL("""SELECT sum(campo1) as sumatoria, campo2 as rut, id
+    val resfinal = sql_dec.decodeSQL("""SELECT CAMPO1,sum(campo1) as sumatoria, campo2 as rut, id
                             , campo3 nombre, campo4+campo5 *campo7 resultado, "nombre, de persona" texto_nuevo
              ,(SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo10 = campo_1_orig) descripcion_avanzada
                             --, mae.campo_mae_txt
@@ -75,7 +75,7 @@ object App {
                             , case when mae.campo_mae_txt = "hola" then 0
                                    when mae.campo_mae_txt = "chaito nomas" then 1
                                    else 3 end campo_resumen 
-                      FROM tabla_3, 
+                      FROM tabla_3 T3, 
                            production_master.tbl_demo demo , 
                            production_master.tbl_tres , 
                            TablaOrigen orig
@@ -92,21 +92,12 @@ object App {
                       or tabla_3.campo2 = "algo bueno" or campo7 = 30
 
                       """, TabAndCols)
-                      * 
-                      */
+                   */  
                        
-    
+   
     val resfinal = sql_dec.decodeSQL(
-    """SELECT distinct teams.conference,otro,sum(uno,10,conference) sumato, count(*) as cantidad,
-       t3.*
-  FROM tabla_3 t3, (
-        SELECT players.school_name,
-               COUNT(*) AS players
-          FROM benn.college_football_players players
-         GROUP BY 1
-       ) sub
-  JOIN benn.college_football_teams teams
-  ON teams.school_name = sub.school_name""", TabAndCols)
+    """SELECT COUNT(1) AS players from tabla order by 1""", TabAndCols)
+    
     
       print_result(resfinal, 1)     
      

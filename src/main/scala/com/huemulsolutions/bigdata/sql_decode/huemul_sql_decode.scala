@@ -730,8 +730,18 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
             Result = Analyze_SQL_CloseFROM(Result, TablesAndColumns, position_sql_begin, localWords(position-1).getpos_end, SQL)
             
             position_sql_begin = localWords(position).getpos_start
+        } else if (word == "ORDER" && stage == "FROM") {
+            stage = "ORDER"
+            Result = Analyze_SQL_CloseFROM(Result, TablesAndColumns, position_sql_begin, localWords(position-1).getpos_end, SQL)
+            
+            position_sql_begin = localWords(position).getpos_start
         } else if (word == "GROUP" && stage == "WHERE") {
             stage = "GROUP BY"
+            Result = Analyze_SQL_CloseWHERE(Result,TablesAndColumns, Result.tables, position_sql_begin, localWords(position-1).getpos_end, SQL)
+            
+            position_sql_begin = localWords(position).getpos_start
+        } else if (word == "ORDER" && stage == "WHERE") {
+            stage = "ORDER"
             Result = Analyze_SQL_CloseWHERE(Result,TablesAndColumns, Result.tables, position_sql_begin, localWords(position-1).getpos_end, SQL)
             
             position_sql_begin = localWords(position).getpos_start
@@ -744,6 +754,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
             var psum = if (word == ",") 1 else 0
             position_sql_begin = localWords(position + psum).getpos_start
             substage = "COLUMN"
+            numOfWords = 0
           }
           
           
@@ -846,7 +857,10 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 colName = word
                 
               //if word is the column name and alias at the same time (for example "select column from table"), then add column origin
-              if (column.column_origin.length == 0 && numOfWords == 1) {
+              if (column.column_origin.length == 0 && (  numOfWords == 1 
+                                                      || (word_prev == "SELECT")
+                                                      || (word_prev == "," && numOfWords == 0)  
+                                                      )) {
                 val new_reg =  new huemul_sql_columns_origin()
                 new_reg.trace_column_name = word
                 column.column_origin.append(new_reg)
@@ -946,19 +960,22 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 
                 var word_last: String = null
                 if (position+2 < position_max){
-                  word_last = localWords(position+1).getsymbol.toUpperCase()
+                  word_last = localWords(position+2).getsymbol.toUpperCase()
                 }
                     
-                if (   word_last == "ON" 
-                    || word_last == "," 
-                    || Symbols_joins.filter { x => word_last != null && x.toUpperCase() == word_last.toUpperCase() }.length > 0
+                if (   word_next == "ON" 
+                    || word_next == "," 
+                    || word_next == "ORDER"
+                    || word_next == "GROUP"
+                    || word_next == "WHERE"
+                    || Symbols_joins.filter { x => word_next != null && x.toUpperCase() == word_next.toUpperCase() }.length > 0
                     ) {
                   table_from.tableAlias_name = table_from.table_name
                   
-                  if (word_last != null)
-                    position += 1  
                 } else if (word_next != null && word_next.toUpperCase() == "AS") {
                   table_from.tableAlias_name = word_last
+                   if (word_last != null)
+                    position += 2
                 } else {
                  table_from.tableAlias_name = word_next
                  if (word_last != null)
@@ -1031,9 +1048,9 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     
     //if last stage was "FROM" --> SQL sentence does't have WHERE, GROUP BY OR HAVING
     if (stage == "FROM") {
-      Result = Analyze_SQL_CloseFROM(Result, TablesAndColumns, position_sql_begin, localWords(position-2).getpos_end, SQL)
+      Result = Analyze_SQL_CloseFROM(Result, TablesAndColumns, position_sql_begin, localWords(position-1).getpos_end, SQL)
     } else if (stage == "WHERE") {
-      Result = Analyze_SQL_CloseWHERE(Result,TablesAndColumns, Result.tables, position_sql_begin, localWords(position-2).getpos_end, SQL)
+      Result = Analyze_SQL_CloseWHERE(Result,TablesAndColumns, Result.tables, position_sql_begin, localWords(position-1).getpos_end, SQL)
     }
     
     return Result
