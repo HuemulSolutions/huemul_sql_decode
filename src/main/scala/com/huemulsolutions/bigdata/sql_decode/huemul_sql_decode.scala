@@ -978,7 +978,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                     position += 2
                 } else {
                  table_from.tableAlias_name = word_next
-                 if (word_last != null)
+                 if (word_last != null) //only add 1
                    position += 1
                 }
                    

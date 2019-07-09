@@ -66,7 +66,7 @@ object App {
     val sql_dec: huemul_SQL_Decode = new huemul_SQL_Decode(excludeWords, 1)
     //sql_dec.decode("""SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo1 = campo_1_orig""", TabAndCols)
     
-    /*
+    
     val resfinal = sql_dec.decodeSQL("""SELECT CAMPO1,sum(campo1) as sumatoria, campo2 as rut, id
                             , campo3 nombre, campo4+campo5 *campo7 resultado, "nombre, de persona" texto_nuevo
              ,(SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo10 = campo_1_orig) descripcion_avanzada
@@ -92,12 +92,48 @@ object App {
                       or tabla_3.campo2 = "algo bueno" or campo7 = 30
 
                       """, TabAndCols)
-                   */  
+                   
                        
-   
+   /*
     val resfinal = sql_dec.decodeSQL(
     """SELECT COUNT(1) AS players from tabla order by 1""", TabAndCols)
-    
+    */
+    /*
+    val resfinal = sql_dec.decodeSQL("""
+    select a.col from tab1 a""", TabAndCols)
+    */
+    /*
+    val resfinal = sql_dec.decodeSQL("""SELECT pet.name, comment FROM pet JOIN event ON (pet.name = event.name)""", TabAndCols)
+    */
+    /*
+    val resfinal = sql_dec.decodeSQL("""
+    SELECT teams.conference AS conference,
+       players.school_name,
+       COUNT(1) AS players
+  FROM benn.college_football_players players
+  JOIN benn.college_football_teams teams
+    ON teams.school_name = players.school_name
+ GROUP BY 1,2""", TabAndCols)
+ * 
+ */
+    /*
+    val resfinal = sql_dec.decodeSQL("""SELECT teams.conference,
+       sub.*
+  FROM (
+        SELECT players.school_name as yo,
+               seba as otro_yo,
+               players.school_name yo_sinas,
+               seba otro_yo_sinas,
+               COUNT(*) AS players,
+COUNT(*) players_2
+          FROM benn.college_football_players players
+          where filtro = 2 and otro_filtro = sin_filtro
+         GROUP BY 1
+       ) sub
+  JOIN benn.college_football_teams teams
+  ON teams.school_name = sub.school_name
+    """, TabAndCols)
+    */
     
       print_result(resfinal, 1)     
      
