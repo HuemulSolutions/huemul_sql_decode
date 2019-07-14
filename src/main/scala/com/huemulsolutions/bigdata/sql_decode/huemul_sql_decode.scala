@@ -17,6 +17,8 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
   Symbols_user.append("GROUP")
   Symbols_user.append("BY")
   Symbols_user.append("HAVING")
+  Symbols_user.append("IS")
+  Symbols_user.append("NULL")
   
   val Symbols_joins: ArrayBuffer[String] = new ArrayBuffer[String] 
   Symbols_joins.append("INNER")
