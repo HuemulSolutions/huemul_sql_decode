@@ -19,6 +19,21 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
   Symbols_user.append("HAVING")
   Symbols_user.append("IS")
   Symbols_user.append("NULL")
+  //ADD DataTypes
+  Symbols_user.append("INT")
+  Symbols_user.append("INTEGER")
+  Symbols_user.append("STRING")
+  Symbols_user.append("VARCHAR")
+  Symbols_user.append("VARCHAR2")
+  Symbols_user.append("BOOLEAN")
+  Symbols_user.append("LONG")
+  Symbols_user.append("REAL")
+  Symbols_user.append("FLOAT")
+  Symbols_user.append("DATE")
+  Symbols_user.append("DATETIME")
+  Symbols_user.append("TIMESTAMP")
+  Symbols_user.append("TINYINT")
+  Symbols_user.append("SMALLINT")
   
   val Symbols_joins: ArrayBuffer[String] = new ArrayBuffer[String] 
   Symbols_joins.append("INNER")
