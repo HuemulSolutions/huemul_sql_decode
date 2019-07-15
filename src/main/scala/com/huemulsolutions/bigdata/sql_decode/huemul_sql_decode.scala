@@ -596,7 +596,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               y_col_orig.trace_table_name = RegFound(0).table_name
               y_col_orig.trace_database_name= RegFound(0).database_name
               y_col_orig.trace_tableAlias_name = RegFound(0).tableAlias_name
-            } else {              
+            } else if (y_col_orig.trace_tableAlias_name == null) {              
               //if not found with self query, search in param TablesAndColumns (all columns & tables)
               val ResColAndTable = TablesAndColumns.filter { z_table => z_table.column_name != null && z_table.column_name.toUpperCase() ==  y_col_orig.trace_column_name.toUpperCase() }
               
