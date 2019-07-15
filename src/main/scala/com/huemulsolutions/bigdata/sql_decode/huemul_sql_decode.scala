@@ -343,7 +343,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         text_found = true
       else if (Symbols_keys.filter { x => x.getsymbol_start(0) == rest_of_text(position_word) || x.getsymbol_end(0) == rest_of_text(position_word)  }.length > 0)
         text_found = true
-      else if (rest_of_text(position_word) == enter(0)) {
+      else if (rest_of_text(position_word) == enter(0) || rest_of_text(position_word).toInt == 13) {
         text_found = true
         text_found_save = false
         add_line = true
@@ -413,7 +413,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         //split word, searching new characters
         val NewResult = splitKeys(word, position_real_start, position_real_end)
         Result.appendAll(NewResult)                 
-      } else if (word == enter)
+      } else if (word == enter || (word.length() > 0 && word.charAt(0).toInt == 13))
         line += 1
       
       //println(s"line: $line pos: [$position_end], word: [$word], word len: [${word.length()}]  real ini: $position_real_start, real end: $position_real_end")
@@ -538,7 +538,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         localTablesAndColumns = localTablesAndColumns ++ TablesAndColumns.filter { y => y.table_name.toUpperCase() == x.table_name.toUpperCase() && y.database_name.toUpperCase() == x.database_name.toUpperCase()  }  
         textTables = textTables.concat(dbandtable)
       }
-      //println(s"database_name: [${x.database_name}], table_Name: [${x.table_name}], alias: [${x.tableAlias_name}]")  
+      //println(s"database_name: [${x.database_name}], table_Name: [${x.table_name}], alias: [${x.tableAlias_name}] [${x.tableAlias_name.length()} (${x.tableAlias_name.charAt(x.tableAlias_name.length()-1).toInt})]")  
     }
     
     //println ("*** columns")
@@ -595,7 +595,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               //get tables information of "FROM" sentence
               y_col_orig.trace_table_name = RegFound(0).table_name
               y_col_orig.trace_database_name= RegFound(0).database_name
-              y_col_orig.trace_tableAlias_name = RegFound(0).tableAlias_name
+              //y_col_orig.trace_tableAlias_name = RegFound(0).tableAlias_name
             } else if (y_col_orig.trace_tableAlias_name == null) {              
               //if not found with self query, search in param TablesAndColumns (all columns & tables)
               val ResColAndTable = TablesAndColumns.filter { z_table => z_table.column_name != null && z_table.column_name.toUpperCase() ==  y_col_orig.trace_column_name.toUpperCase() }
@@ -946,7 +946,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 
                 //Add temp sub query to table list
                 res_sel.select_on_select.columns.foreach { x_subquery => 
-                  println(s"inserta datos ${table_from.database_name}, ${table_from.table_name}, ${x_subquery.column_name}")
+                  //println(s"inserta datos ${table_from.database_name}, ${table_from.table_name}, ${x_subquery.column_name}")
                   val tempQuery = new huemul_sql_tables_and_columns().setData(table_from.database_name, table_from.table_name, x_subquery.column_name)
                   TablesAndColumns.append(tempQuery)
                 }
