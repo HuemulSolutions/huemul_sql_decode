@@ -642,7 +642,13 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         
       //println("final")
       //x.column_origin.foreach { y => println(s"[${y.trace_tableAlias_name}].[${y.trace_column_name}]   trace_table_name:${y.trace_table_name} database:${y.trace_database_name}")}
-      }
+    }
+    
+    //Exclude select "*"
+    decode_result.columns = decode_result.columns.filter { x => ( 
+                                                                       !(x.column_name == null && x.column_sql == "*") 
+                                                                    && !(x.column_name == null && x.column_origin.length == 1 && x.column_origin(0).trace_column_name == "*")
+                                                                  )}
     
     return decode_result
   }
