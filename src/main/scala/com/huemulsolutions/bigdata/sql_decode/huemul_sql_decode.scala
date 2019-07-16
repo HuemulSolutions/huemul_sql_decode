@@ -546,6 +546,22 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       //println(s"name: [${x.column_name}] sql: [${x.column_sql}] ")
       if (x.column_name == null && x.column_sql == "*") {
         //get "select *, add all columns origin from all tables or alias specify
+        decode_result.tables.foreach { x_tables => 
+            localTablesAndColumns.filter { x_newColumn => x_newColumn.table_name.toUpperCase() == x_tables.table_name.toUpperCase() && x_newColumn.database_name.toUpperCase() == x_tables.database_name.toUpperCase() }.foreach { x_newColumn =>  
+              //Add all columns of table
+              val addCol = new huemul_sql_columns()
+              addCol.column_name = x_newColumn.column_name
+              addCol.column_sql = s"${x_tables.tableAlias_name}.${x_newColumn.column_name} --added automatically by huemul_sql_decode"
+              val addcolumn_origin = new huemul_sql_columns_origin()
+              addcolumn_origin.trace_column_name = x_newColumn.column_name
+              addcolumn_origin.trace_database_name = x_newColumn.database_name
+              addcolumn_origin.trace_table_name = x_newColumn.table_name
+              addcolumn_origin.trace_tableAlias_name = x_tables.tableAlias_name
+              addCol.column_origin.append(addcolumn_origin)
+              decode_result.columns.append(addCol)
+            }
+        }
+        /*
         localTablesAndColumns.foreach { x_newcolums =>
           val localDB = decode_result.tables.filter { x_tables => x_newcolums.table_name.toUpperCase() == x_tables.table_name.toUpperCase() && x_newcolums.database_name.toUpperCase() == x_tables.database_name.toUpperCase() }
           var localAliasName: String = null
@@ -563,6 +579,8 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
           addCol.column_origin.append(addcolumn_origin)
           decode_result.columns.append(addCol)
         }
+        * 
+        */
       } else if (x.column_name == null && x.column_origin.length == 1 && x.column_origin(0).trace_column_name == "*") {
         //get database & table names
         val localDB = decode_result.tables.filter { x_tables => x_tables.tableAlias_name.toUpperCase() == x.column_origin(0).trace_tableAlias_name.toUpperCase()}
