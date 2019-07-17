@@ -561,26 +561,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               decode_result.columns.append(addCol)
             }
         }
-        /*
-        localTablesAndColumns.foreach { x_newcolums =>
-          val localDB = decode_result.tables.filter { x_tables => x_newcolums.table_name.toUpperCase() == x_tables.table_name.toUpperCase() && x_newcolums.database_name.toUpperCase() == x_tables.database_name.toUpperCase() }
-          var localAliasName: String = null
-          if (localDB.length > 0) 
-            localAliasName = localDB(0).tableAlias_name
-            
-          val addCol = new huemul_sql_columns()
-          addCol.column_name = x_newcolums.column_name
-          addCol.column_sql = x_newcolums.column_name.concat(" --added automatically by huemul")
-          val addcolumn_origin = new huemul_sql_columns_origin()
-          addcolumn_origin.trace_column_name = x_newcolums.column_name
-          addcolumn_origin.trace_database_name = x_newcolums.database_name
-          addcolumn_origin.trace_table_name = x_newcolums.table_name
-          addcolumn_origin.trace_tableAlias_name = if (localAliasName == null) x_newcolums.table_name else localAliasName
-          addCol.column_origin.append(addcolumn_origin)
-          decode_result.columns.append(addCol)
-        }
-        * 
-        */
+        
       } else if (x.column_name == null && x.column_origin.length == 1 && x.column_origin(0).trace_column_name == "*") {
         //get database & table names
         val localDB = decode_result.tables.filter { x_tables => x_tables.tableAlias_name.toUpperCase() == x.column_origin(0).trace_tableAlias_name.toUpperCase()}
@@ -602,7 +583,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
           }           
         }
       } else {
-      
+        
         x.column_origin.foreach { y_col_orig =>
           //complete database & Table information)
           if (y_col_orig.trace_database_name == null) {          
@@ -640,6 +621,9 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         }
       }
         
+      //distinct
+      x.column_origin = x.column_origin.distinct
+      
       //println("final")
       //x.column_origin.foreach { y => println(s"[${y.trace_tableAlias_name}].[${y.trace_column_name}]   trace_table_name:${y.trace_table_name} database:${y.trace_database_name}")}
     }
@@ -748,6 +732,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       if (position > 0)
         word_prev = localWords(position-1).getsymbol.toUpperCase()
         
+        
       if (CanProcess) {
         //try to determine stage
         if (stage == null) {
@@ -845,10 +830,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
           //looking for field}
           if (stage == "SELECT" && substage == "COLUMN") {
             //search for "(" and ")"
-            if (word == "(")
-              parenthesis += 1
-            else if (word == ")")
-              parenthesis -= 1
+            
                         
             if (word == "(" && word_next == "SELECT") {
               SentenceIsFound = true
@@ -857,7 +839,10 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               position = res_sel.position
               select_on_select = res_sel.select_on_select
               numOfWords += 2
-            }
+            } else if (word == "(")
+              parenthesis += 1
+            else if (word == ")")
+              parenthesis -= 1
             
             //search for sql functions
             if (SentenceIsFound == false)  {
