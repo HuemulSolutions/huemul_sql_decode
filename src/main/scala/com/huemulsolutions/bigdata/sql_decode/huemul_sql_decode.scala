@@ -621,8 +621,21 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         }
       }
         
+      
       //distinct
-      x.column_origin = x.column_origin.distinct
+      var finalOrigin: ArrayBuffer[huemul_sql_columns_origin] = new ArrayBuffer[huemul_sql_columns_origin]()
+      x.column_origin.foreach { x_ori_from =>  
+        if (finalOrigin.filter { x_fin => x_fin.trace_database_name == x_ori_from.trace_database_name &&
+                                          x_fin.trace_table_name == x_ori_from.trace_table_name &&
+                                          x_fin.trace_column_name == x_ori_from.trace_column_name &&
+                                          x_fin.trace_tableAlias_name == x_ori_from.trace_tableAlias_name }.length == 0) {
+          finalOrigin.append(x_ori_from)
+        }
+      }
+      
+      
+
+      x.column_origin = finalOrigin
       
       //println("final")
       //x.column_origin.foreach { y => println(s"[${y.trace_tableAlias_name}].[${y.trace_column_name}]   trace_table_name:${y.trace_table_name} database:${y.trace_database_name}")}
