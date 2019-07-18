@@ -92,8 +92,15 @@ object App {
                       or tabla_3.campo2 = "algo bueno" or campo7 = 30
 
                       """, TabAndCols)
-                   
                        
+                      
+                   
+     /*                  
+    val resfinal = sql_dec.decodeSQL(
+    """SELECT * from tabla_3""", TabAndCols)
+    * 
+    */
+    
    /*
     val resfinal = sql_dec.decodeSQL(
     """SELECT COUNT(1) AS players from tabla order by 1""", TabAndCols)
