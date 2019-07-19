@@ -81,7 +81,6 @@ class AppTest {
     
     @Test
     def testplan_query01_C001_OK() = assertTrue(testplan_query01_C001)
-    /*
     @Test
     def testplan_query01_C002_OK() = assertTrue(testplan_query01_C002)
     @Test
@@ -100,7 +99,16 @@ class AppTest {
     def testplan_query01_C009_OK() = assertTrue(testplan_query01_C009)
     @Test
     def testplan_query01_C010_OK() = assertTrue(testplan_query01_C010)
-    */
+    
+    @Test
+    def testplan_query01_SQ_001_T001_OK()= assertTrue(testplan_query01_SQ_001_T001)
+    @Test
+    def testplan_query01_SQRes_OK()= assertTrue(testplan_query01_SQRes)
+    @Test
+    def testplan_query01_SQ_001_T001_C01_OK() = assertTrue(testplan_query01_SQ_001_T001_C01)
+    @Test
+    def testplan_query01_SQ_001_T001_C02_OK() = assertTrue(testplan_query01_SQ_001_T001_C02)
+    
     /*********************************************************************************/
     /**************   V A L I D A C I O N   D E   C A M P O S    *********************/
     /*********************************************************************************/
@@ -123,7 +131,7 @@ class AppTest {
           resfinal_query1.columns(0).column_origin.length == 1 
           )) {
         resultado_final = false
-        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[CAMPO1], column_sql [${resfinal_query1.columns(0).column_sql}]/[CAMPO1], column_origin [${resfinal_query1.columns(0).column_origin}]/[1]")
+        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[CAMPO1], column_sql [${resfinal_query1.columns(0).column_sql}]/[CAMPO1], column_origin [${resfinal_query1.columns(0).column_origin.length}]/[1]")
       } else {
         if (!(resfinal_query1.columns(0).column_origin(0).trace_database_name == "TEMP_HUEMUL" &&
               resfinal_query1.columns(0).column_origin(0).trace_table_name == "TEMP_HUEMUL_3" &&
@@ -148,14 +156,14 @@ class AppTest {
           resfinal_query1.columns(1).column_origin.length == 1 
           )) {
         resultado_final = false
-        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[SUMATORIA], column_sql [${resfinal_query1.columns(0).column_sql}]/[sum(campo1) as sumatoria], column_origin [${resfinal_query1.columns(0).column_origin}]/[1]")
+        println(s"error: tabla(0) campo(1) real/esperado column_name [${resfinal_query1.columns(1).column_name}]/[SUMATORIA], column_sql [${resfinal_query1.columns(1).column_sql}]/[sum(campo1) as sumatoria], column_origin [${resfinal_query1.columns(1).column_origin.length}]/[1]")
       } else {
         if (!(resfinal_query1.columns(1).column_origin(0).trace_database_name == "TEMP_HUEMUL" &&
               resfinal_query1.columns(1).column_origin(0).trace_table_name == "TEMP_HUEMUL_3" &&
               resfinal_query1.columns(1).column_origin(0).trace_tableAlias_name == "TEMP_HUEMUL_3" &&
               resfinal_query1.columns(1).column_origin(0).trace_column_name == "CAMPO1")) {
           resultado_final = false
-          println(s"""error: tabla(0) campo(0) origin(0) real/esperado 
+          println(s"""error: tabla(0) campo(1) origin(0) real/esperado 
                       trace_database_name [${resfinal_query1.columns(1).column_origin(0).trace_database_name}]/[TEMP_HUEMUL], 
                       trace_table_name [${resfinal_query1.columns(1).column_origin(0).trace_table_name}]/[TEMP_HUEMUL_3], 
                       trace_tableAlias_name [${resfinal_query1.columns(1).column_origin(0).trace_tableAlias_name}]/[TEMP_HUEMUL_3], 
@@ -173,14 +181,14 @@ class AppTest {
           resfinal_query1.columns(2).column_origin.length == 1 
           )) {
         resultado_final = false
-        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[RUT], column_sql [${resfinal_query1.columns(0).column_sql}]/[campo2 as rut], column_origin [${resfinal_query1.columns(0).column_origin}]/[1]")
+        println(s"error: tabla(0) campo(2) real/esperado column_name [${resfinal_query1.columns(2).column_name}]/[RUT], column_sql [${resfinal_query1.columns(2).column_sql}]/[campo2 as rut], column_origin [${resfinal_query1.columns(2).column_origin.length}]/[1]")
       } else {
         if (!(resfinal_query1.columns(2).column_origin(0).trace_database_name == "TEMP_HUEMUL" &&
               resfinal_query1.columns(2).column_origin(0).trace_table_name == "TEMP_HUEMUL_3" &&
               resfinal_query1.columns(2).column_origin(0).trace_tableAlias_name == "TEMP_HUEMUL_3" &&
               resfinal_query1.columns(2).column_origin(0).trace_column_name == "CAMPO2")) {
           resultado_final = false
-          println(s"""error: tabla(0) campo(0) origin(0) real/esperado 
+          println(s"""error: tabla(0) campo(2) origin(0) real/esperado 
                       trace_database_name [${resfinal_query1.columns(2).column_origin(0).trace_database_name}]/[TEMP_HUEMUL], 
                       trace_table_name [${resfinal_query1.columns(2).column_origin(0).trace_table_name}]/[TEMP_HUEMUL_3], 
                       trace_tableAlias_name [${resfinal_query1.columns(2).column_origin(0).trace_tableAlias_name}]/[TEMP_HUEMUL_3], 
@@ -198,14 +206,14 @@ class AppTest {
           resfinal_query1.columns(3).column_origin.length == 1 
           )) {
         resultado_final = false
-        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[ID], column_sql [${resfinal_query1.columns(0).column_sql}]/[id], column_origin [${resfinal_query1.columns(0).column_origin}]/[1]")
+        println(s"error: tabla(0) campo(3) real/esperado column_name [${resfinal_query1.columns(3).column_name}]/[ID], column_sql [${resfinal_query1.columns(3).column_sql}]/[id], column_origin [${resfinal_query1.columns(3).column_origin.length}]/[1]")
       } else {
         if (!(resfinal_query1.columns(3).column_origin(0).trace_database_name == "TEMP_HUEMUL" &&
               resfinal_query1.columns(3).column_origin(0).trace_table_name == "TEMP_HUEMUL_5" &&
               resfinal_query1.columns(3).column_origin(0).trace_tableAlias_name == "TEMP_HUEMUL_5" &&
               resfinal_query1.columns(3).column_origin(0).trace_column_name == "ID")) {
           resultado_final = false
-          println(s"""error: tabla(0) campo(0) origin(0) real/esperado 
+          println(s"""error: tabla(0) campo(3) origin(0) real/esperado 
                       trace_database_name [${resfinal_query1.columns(3).column_origin(0).trace_database_name}]/[TEMP_HUEMUL], 
                       trace_table_name [${resfinal_query1.columns(3).column_origin(0).trace_table_name}]/[TEMP_HUEMUL_5], 
                       trace_tableAlias_name [${resfinal_query1.columns(3).column_origin(0).trace_tableAlias_name}]/[TEMP_HUEMUL_5], 
@@ -223,14 +231,14 @@ class AppTest {
           resfinal_query1.columns(4).column_origin.length == 1 
           )) {
         resultado_final = false
-        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[NOMBRE], column_sql [${resfinal_query1.columns(0).column_sql}]/[campo3 nombre], column_origin [${resfinal_query1.columns(0).column_origin}]/[1]")
+        println(s"error: tabla(0) campo(4) real/esperado column_name [${resfinal_query1.columns(4).column_name}]/[NOMBRE], column_sql [${resfinal_query1.columns(4).column_sql}]/[campo3 nombre], column_origin [${resfinal_query1.columns(4).column_origin.length}]/[1]")
       } else {
         if (!(resfinal_query1.columns(4).column_origin(0).trace_database_name == "prod_dim" &&
               resfinal_query1.columns(4).column_origin(0).trace_table_name == "tabla_3" &&
               resfinal_query1.columns(4).column_origin(0).trace_tableAlias_name == "tabla_3" &&
               resfinal_query1.columns(4).column_origin(0).trace_column_name == "CAMPO3")) {
           resultado_final = false
-          println(s"""error: tabla(0) campo(0) origin(0) real/esperado 
+          println(s"""error: tabla(0) campo(4) origin(0) real/esperado 
                       trace_database_name [${resfinal_query1.columns(4).column_origin(0).trace_database_name}]/[prod_dim], 
                       trace_table_name [${resfinal_query1.columns(4).column_origin(0).trace_table_name}]/[tabla_3], 
                       trace_tableAlias_name [${resfinal_query1.columns(4).column_origin(0).trace_tableAlias_name}]/[tabla_3], 
@@ -248,11 +256,11 @@ class AppTest {
           resfinal_query1.columns(5).column_origin.length == 3 
           )) {
         resultado_final = false
-        println(s"error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.columns(0).column_name}]/[RESULTADO], column_sql [${resfinal_query1.columns(0).column_sql}]/[campo4+campo5 *campo7 resultado], column_origin [${resfinal_query1.columns(0).column_origin}]/[3]")
+        println(s"error: tabla(0) campo(5) real/esperado column_name [${resfinal_query1.columns(5).column_name}]/[RESULTADO], column_sql [${resfinal_query1.columns(5).column_sql}]/[campo4+campo5 *campo7 resultado], column_origin [${resfinal_query1.columns(5).column_origin.length}]/[3]")
       } else {
         if (!(resfinal_query1.columns(5).column_origin(0).trace_database_name == null &&
               resfinal_query1.columns(5).column_origin(0).trace_table_name == null &&
-              resfinal_query1.columns(5).column_origin(0).trace_tableAlias_name == "null" &&
+              resfinal_query1.columns(5).column_origin(0).trace_tableAlias_name == null &&
               resfinal_query1.columns(5).column_origin(0).trace_column_name == "CAMPO4")) {
           resultado_final = false
           println(s"""error: tabla(0) campo(5) origin(0) real/esperado 
@@ -288,6 +296,86 @@ class AppTest {
       }
       return resultado_final
     }
+    
+    def testplan_query01_C007(): Boolean = {
+      var resultado_final: Boolean = true
+      
+      if (!(resfinal_query1.columns(6).column_name == "TEXTO_NUEVO" && 
+          resfinal_query1.columns(6).column_sql == """"nombre, de persona" texto_nuevo""" &&
+          resfinal_query1.columns(6).column_origin.length == 0 
+          )) {
+        resultado_final = false
+        println(s"""error: tabla(0) campo(6) real/esperado column_name [${resfinal_query1.columns(6).column_name}]/[TEXTO_NUEVO], column_sql [${resfinal_query1.columns(6).column_sql}]/["nombre, de persona" texto_nuevo], column_origin [${resfinal_query1.columns(6).column_origin.length}]/[0]""")
+      } 
+      return resultado_final
+    }
+    
+    def testplan_query01_C008(): Boolean = {
+      var resultado_final: Boolean = true
+      
+      if (!(resfinal_query1.columns(7).column_name == "DESCRIPCION_AVANZADA" && 
+          resfinal_query1.columns(7).column_sql == """(SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo10 = campo_1_orig) descripcion_avanzada""" &&
+          resfinal_query1.columns(7).column_origin.length == 1 
+          )) {
+        resultado_final = false
+        println(s"""error: tabla(0) campo(7) real/esperado column_name [${resfinal_query1.columns(7).column_name}]/[DESCRIPCION_AVANZADA], column_sql [${resfinal_query1.columns(7).column_sql}]/[campo3 nombre], column_origin [${resfinal_query1.columns(7).column_origin.length}]/[1]""")
+      } else {
+        if (!(resfinal_query1.columns(7).column_origin(0).trace_database_name == "prod_dim" &&
+              resfinal_query1.columns(7).column_origin(0).trace_table_name == "tabla_2" &&
+              resfinal_query1.columns(7).column_origin(0).trace_tableAlias_name == "tabla_2" &&
+              resfinal_query1.columns(7).column_origin(0).trace_column_name == "DESCRIPCION")) {
+          resultado_final = false
+          println(s"""error: tabla(0) campo(7) origin(0) real/esperado 
+                      trace_database_name [${resfinal_query1.columns(7).column_origin(0).trace_database_name}]/[prod_dim], 
+                      trace_table_name [${resfinal_query1.columns(7).column_origin(0).trace_table_name}]/[tabla_2], 
+                      trace_tableAlias_name [${resfinal_query1.columns(7).column_origin(0).trace_tableAlias_name}]/[tabla_2], 
+                      trace_column_name [${resfinal_query1.columns(7).column_origin(0).trace_column_name}]/[DESCRIPCION]  """)        
+        }
+      }
+      return resultado_final
+    }
+    
+    def testplan_query01_C009(): Boolean = {
+      var resultado_final: Boolean = true
+      
+      if (!(resfinal_query1.columns(8).column_name == "10" && 
+          resfinal_query1.columns(8).column_sql == """10""" &&
+          resfinal_query1.columns(8).column_origin.length == 0 
+          )) {
+        resultado_final = false
+        println(s"""error: tabla(0) campo(8) real/esperado column_name [${resfinal_query1.columns(8).column_name}]/[10], column_sql [${resfinal_query1.columns(8).column_sql}]/[10], column_origin [${resfinal_query1.columns(8).column_origin.length}]/[0]""")
+      } 
+      return resultado_final
+    }
+    
+    def testplan_query01_C010(): Boolean = {
+      var resultado_final: Boolean = true
+      if (!(resfinal_query1.columns(9).column_name == "CAMPO_RESUMEN" && 
+          resfinal_query1.columns(9).column_sql.hashCode() == """case when mae.campo_mae_txt = "hola" then 0
+                                     when mae.campo_mae_txt = "chaito nomas" then 1
+                                     else 3 end campo_resumen""".hashCode() &&
+          resfinal_query1.columns(9).column_origin.length == 1 
+          )) {
+        resultado_final = false
+        println(s"""error: tabla(0) campo(9) real/esperado column_name [${resfinal_query1.columns(9).column_name}]/[CAMPO_RESUMEN], column_sql [${resfinal_query1.columns(9).column_sql}]/[case when mae.campo_mae_txt = "hola" then 0
+                                   when mae.campo_mae_txt = "chaito nomas" then 1
+                                   else 3 end campo_resumen], column_origin [${resfinal_query1.columns(9).column_origin.length}]/[1]""")
+      } else {
+        if (!(resfinal_query1.columns(9).column_origin(0).trace_database_name == "TEMP_HUEMUL" &&
+              resfinal_query1.columns(9).column_origin(0).trace_table_name == "TEMP_HUEMUL_5" &&
+              resfinal_query1.columns(9).column_origin(0).trace_tableAlias_name == "MAE" &&
+              resfinal_query1.columns(9).column_origin(0).trace_column_name == "CAMPO_MAE_TXT")) {
+          resultado_final = false
+          println(s"""error: tabla(0) campo(9) origin(0) real/esperado 
+                      trace_database_name [${resfinal_query1.columns(9).column_origin(0).trace_database_name}]/[TEMP_HUEMUL], 
+                      trace_table_name [${resfinal_query1.columns(9).column_origin(0).trace_table_name}]/[TEMP_HUEMUL_5], 
+                      trace_tableAlias_name [${resfinal_query1.columns(9).column_origin(0).trace_tableAlias_name}]/[MAE], 
+                      trace_column_name [${resfinal_query1.columns(9).column_origin(0).trace_column_name}]/[CAMPO_MAE_TXT]  """)        
+        }
+      }
+      return resultado_final
+    }
+    
     /*********************************************************************************/
     /**************   V A L I D A C I O N   D E   T A B L A S    *********************/
     /*********************************************************************************/
@@ -396,5 +484,80 @@ class AppTest {
       }
       return resultado_final
     }  
+    
+    
+    
+    
+    def testplan_query01_SQRes(): Boolean = {
+      var resultado_final: Boolean = true
+     
+      if (!(resfinal_query1.subquery_result.length == 2)){
+        resultado_final = false
+        println(s"error: subquery, esperado 2, real ${resfinal_query1.subquery_result.length} ")
+      }
+      return resultado_final
+    }  
+    
+    def testplan_query01_SQ_001_T001(): Boolean = {
+      var resultado_final: Boolean = true
+     
+      if (!(resfinal_query1.subquery_result(0).tables(0).database_name == null && 
+          resfinal_query1.subquery_result(0).tables(0).table_name == "TABLA3" &&
+          resfinal_query1.subquery_result(0).tables(0).tableAlias_name == "TABLA3")) {
+        resultado_final = false
+        println(s"error: subquery(0) tabla(0) real/esperado database_name [${resfinal_query1.subquery_result(0).tables(0).database_name}]/[null], table_name [${resfinal_query1.subquery_result(0).tables(0).table_name}]/[TABLA3], database_name [${resfinal_query1.subquery_result(0).tables(0).tableAlias_name}]/[TABLA3]")
+      }
+      return resultado_final
+    }  
+    
+    def testplan_query01_SQ_001_T001_C01(): Boolean = {
+      var resultado_final: Boolean = true
+      
+      if (!(resfinal_query1.subquery_result(0).columns(0).column_name == "CAMPO1" && 
+          resfinal_query1.subquery_result(0).columns(0).column_sql == """campo1""" &&
+          resfinal_query1.subquery_result(0).columns(0).column_origin.length == 1 
+          )) {
+        resultado_final = false
+        println(s"""error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.subquery_result(0).columns(0).column_name}]/[CAMPO1], column_sql [${resfinal_query1.subquery_result(0).columns(0).column_sql}]/[campo1], column_origin [${resfinal_query1.subquery_result(0).columns(0).column_origin.length}]/[1]""")
+      } else {
+        if (!(resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_database_name == null &&
+              resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_table_name == null &&
+              resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_tableAlias_name == null &&
+              resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_column_name == "CAMPO1")) {
+          resultado_final = false
+          println(s"""error: tabla(0) campo(0) origin(0) real/esperado 
+                      trace_database_name [${resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_database_name}]/[null], 
+                      trace_table_name [${resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_table_name}]/[null], 
+                      trace_tableAlias_name [${resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_tableAlias_name}]/[null], 
+                      trace_column_name [${resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_column_name}]/[CAMPO1]  """)        
+        }
+      }
+      return resultado_final
+    }
+    
+    def testplan_query01_SQ_001_T001_C02(): Boolean = {
+      var resultado_final: Boolean = true
+      
+      if (!(resfinal_query1.subquery_result(0).columns(1).column_name == "CAMPO2" && 
+          resfinal_query1.subquery_result(0).columns(1).column_sql == """campo2""" &&
+          resfinal_query1.subquery_result(0).columns(1).column_origin.length == 1 
+          )) {
+        resultado_final = false
+        println(s"""error: tabla(0) campo(0) real/esperado column_name [${resfinal_query1.subquery_result(0).columns(1).column_name}]/[CAMPO2], column_sql [${resfinal_query1.subquery_result(0).columns(1).column_sql}]/[campo2], column_origin [${resfinal_query1.subquery_result(0).columns(1).column_origin.length}]/[1]""")
+      } else {
+        if (!(resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_database_name == null &&
+              resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_table_name == null &&
+              resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_tableAlias_name == null &&
+              resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_column_name == "CAMPO2")) {
+          resultado_final = false
+          println(s"""error: tabla(0) campo(0) origin(0) real/esperado 
+                      trace_database_name [${resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_database_name}]/[null], 
+                      trace_table_name [${resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_table_name}]/[null], 
+                      trace_tableAlias_name [${resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_tableAlias_name}]/[null], 
+                      trace_column_name [${resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_column_name}]/[CAMPO2]  """)        
+        }
+      }
+      return resultado_final
+    }
 
 }

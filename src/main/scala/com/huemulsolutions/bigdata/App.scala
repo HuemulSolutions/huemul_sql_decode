@@ -32,7 +32,7 @@ object App {
     println("   ")
     println("************ FINAL RESULTS ************ ")
     println(s"N° Errores: ${resfinal.NumErrors}")
-    println(s"N° subquerys: ${resfinal.AutoIncSubQuery}")
+    println(s"N° subquerys: ${resfinal.subquery_result.length}")
     println(s"AliasDatabase: ${resfinal.AliasDatabase}")
     println(s"AliasQuery: ${resfinal.AliasQuery}")
     

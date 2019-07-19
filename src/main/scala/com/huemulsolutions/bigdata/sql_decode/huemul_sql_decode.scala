@@ -896,10 +896,11 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 colName = word
                 
               //if word is the column name and alias at the same time (for example "select column from table"), then add column origin
-              if (column.column_origin.length == 0 && (  numOfWords == 1 
-                                                      || (word_prev == "SELECT")
-                                                      || (word_prev == "," && numOfWords == 0)  
-                                                      )) {
+              if (column.column_origin.length == 0 && Try(word.toDouble).isFailure && 
+                                       (   numOfWords == 1 
+                                    || (word_prev == "SELECT")
+                                    || (word_prev == "," && numOfWords == 0)  
+                                    )) {
                 val new_reg =  new huemul_sql_columns_origin()
                 new_reg.trace_column_name = word
                 column.column_origin.append(new_reg)
