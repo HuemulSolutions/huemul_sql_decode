@@ -1098,7 +1098,13 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     Result
     
   }
-  
+
+  /**
+   * Decode SQL
+   * @param SQL SQL code
+   * @param TablesAndColumns list of tables and columns
+   * @return
+   */
   def decodeSQL(SQL: String, TablesAndColumns: ArrayBuffer[huemul_sql_tables_and_columns] = new ArrayBuffer[huemul_sql_tables_and_columns] ): huemul_sql_decode_result = {
     
     //split words
