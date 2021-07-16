@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.huemulsolutions.bigdata</groupId>
-  <artifactId>huemul-sql-decode</artifactId>
+  <artifactId>huemul-sql-decode_2.12</artifactId>
   <version>1.0</version>
   <name>huemul_sql_decode</name>
   <description>Obtiene los campos y tablas utilizados en una sentencia SQL. Dada la siguiente consulta:description
@@ -24,8 +24,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <encoding>UTF-8</encoding>
-    <scala.tools.version>2.11</scala.tools.version>
-    <scala.version>2.11.8</scala.version>
+    <scala.tools.version>2.12</scala.tools.version>
+    <scala.version>2.12.10</scala.version>
   </properties>
   
   <developers>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -87,7 +87,7 @@
 	  	<plugin>
 	      <groupId>org.apache.maven.plugins</groupId>
 	      <artifactId>maven-gpg-plugin</artifactId>
-	      <version>1.5</version>
+	      <version>3.0.1</version>
 	      <executions>
 	        <execution>
 	          <id>sign-artifacts</id>
@@ -102,7 +102,7 @@
 	    <plugin>
 	      <groupId>org.apache.maven.plugins</groupId>
 	      <artifactId>maven-source-plugin</artifactId>
-	      <version>2.2.1</version>
+	      <version>3.2.1</version>
 	      <executions>
 	        <execution>
 	          <id>attach-sources</id>
@@ -116,7 +116,7 @@
 	    <plugin>
 	      <groupId>net.alchim31.maven</groupId>
 	      <artifactId>scala-maven-plugin</artifactId>
-	      <version>3.4.2</version>
+	      <version>4.5.3</version>
 	      <executions>
 	        <execution>
 	          <id>attach-javadocs</id>
