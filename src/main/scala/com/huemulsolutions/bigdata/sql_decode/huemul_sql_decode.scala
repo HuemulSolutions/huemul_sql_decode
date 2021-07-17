@@ -317,7 +317,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
   
   var line: Int = 0
   private var numTempSubQuery: Int = AutoIncSubQuery
-  def getNumTempSubQuery(): Int = {return numTempSubQuery}
+  def getNumTempSubQuery(): Int = numTempSubQuery
   
   /**
    * split a string in characters, search for "\n" and others for split in two o more words
@@ -326,22 +326,22 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     val Result: ArrayBuffer[huemul_sql_symbol_base] = new ArrayBuffer[huemul_sql_symbol_base] ()
     var rest_of_text: String = text
     var position_word: Integer = 0
-    var cycle: Int = 0
+    //var cycle: Int = 0
     var text_found: Boolean = false
     var text_found_save: Boolean = true
     var add_line: Boolean = false
     val enter: String = "\n"
     
     var pos_start: Int = pos_real_start
-    var pos_end: Int = pos_real_end
+    val pos_end: Int = pos_real_end
     while (position_word < rest_of_text.length()) {
       text_found_save = true
       add_line = false
       text_found = false
       
-      if (Symbols.filter { x => x(0) == rest_of_text(position_word)  }.length > 0) 
+      if (Symbols.exists { x => x(0) == rest_of_text(position_word) })
         text_found = true
-      else if (Symbols_keys.filter { x => x.getsymbol_start(0) == rest_of_text(position_word) || x.getsymbol_end(0) == rest_of_text(position_word)  }.length > 0)
+      else if (Symbols_keys.exists { x => x.getsymbol_start(0) == rest_of_text(position_word) || x.getsymbol_end(0) == rest_of_text(position_word) })
         text_found = true
       else if (rest_of_text(position_word) == enter(0) || rest_of_text(position_word).toInt == 13) {
         text_found = true
@@ -375,10 +375,10 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       }     
     }
   
-    if (rest_of_text.length() > 0)
+    if (rest_of_text.nonEmpty)
       Result.append(new huemul_sql_symbol_base(rest_of_text, line, pos_start,pos_end ))
     
-    return Result
+    Result
   }
   
   /**
@@ -413,7 +413,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         //split word, searching new characters
         val NewResult = splitKeys(word, position_real_start, position_real_end)
         Result.appendAll(NewResult)                 
-      } else if (word == enter || (word.length() > 0 && word.charAt(0).toInt == 13))
+      } else if (word == enter || (word.nonEmpty && word.charAt(0).toInt == 13))
         line += 1
       
       //println(s"line: $line pos: [$position_end], word: [$word], word len: [${word.length()}]  real ini: $position_real_start, real end: $position_real_end")
@@ -424,14 +424,14 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     }
     
     
-    return Result
+    Result
   }
   
   /**
    * remove comments (like --), 
    */
   def Analyze_SQL_RemoveComments(p_words: ArrayBuffer[huemul_sql_symbol_base]): ArrayBuffer[huemul_sql_symbol_base] = {
-    var local_words = p_words
+    val local_words = p_words
     var actual_line = -1
     var position = 0
     var remove_start_pos: Int = -1
@@ -456,7 +456,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       position += 1
     }
     
-    return local_words
+    local_words
   }
   
   /**
@@ -464,7 +464,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
    */
   private class class_get_select_on_select {
     var position: Int = 0
-    var select_on_select: huemul_sql_decode_result = null
+    var select_on_select: huemul_sql_decode_result = _
   }
   
   /**
@@ -511,7 +511,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     }
     
     
-    return res
+    res
   }
   
   /**
@@ -526,7 +526,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       
       if (x.database_name == null) {
         val tabRes = TablesAndColumns.filter { y => y.table_name != null && y.table_name.toUpperCase() == x.table_name.toUpperCase()  }  
-        if (tabRes.length > 0)
+        if (tabRes.nonEmpty)
           x.database_name = tabRes(0).database_name
       }
       
@@ -565,7 +565,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       } else if (x.column_name == null && x.column_origin.length == 1 && x.column_origin(0).trace_column_name == "*") {
         //get database & table names
         val localDB = decode_result.tables.filter { x_tables => x_tables.tableAlias_name.toUpperCase() == x.column_origin(0).trace_tableAlias_name.toUpperCase()}
-        if (localDB.length > 0) {
+        if (localDB.nonEmpty) {
           //filter table from localtables
           val newColumns = localTablesAndColumns.filter { x_localcols => x_localcols.table_name.toUpperCase() == localDB(0).table_name.toUpperCase() && x_localcols.database_name.toUpperCase() == localDB(0).database_name.toUpperCase() }
           
@@ -620,15 +620,17 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
          
         }
       }
-        
-      
+
+
       //distinct
-      var finalOrigin: ArrayBuffer[huemul_sql_columns_origin] = new ArrayBuffer[huemul_sql_columns_origin]()
+      val finalOrigin: ArrayBuffer[huemul_sql_columns_origin] = new ArrayBuffer[huemul_sql_columns_origin]()
       x.column_origin.foreach { x_ori_from =>  
-        if (finalOrigin.filter { x_fin => x_fin.trace_database_name == x_ori_from.trace_database_name &&
-                                          x_fin.trace_table_name == x_ori_from.trace_table_name &&
-                                          x_fin.trace_column_name == x_ori_from.trace_column_name &&
-                                          x_fin.trace_tableAlias_name == x_ori_from.trace_tableAlias_name }.length == 0) {
+        if (!finalOrigin.exists { x_fin =>
+          x_fin.trace_database_name == x_ori_from.trace_database_name &&
+            x_fin.trace_table_name == x_ori_from.trace_table_name &&
+            x_fin.trace_column_name == x_ori_from.trace_column_name &&
+            x_fin.trace_tableAlias_name == x_ori_from.trace_tableAlias_name
+        }) {
           finalOrigin.append(x_ori_from)
         }
       }
@@ -647,7 +649,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                                                                     && !(x.column_name == null && x.column_origin.length == 1 && x.column_origin(0).trace_column_name == "*")
                                                                   )}
     
-    return decode_result
+    decode_result
   }
   
    /**
@@ -672,14 +674,14 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
         //complete table and database name with ALIAS name
         if (x_newreg.trace_tableAlias_name != null) {
           val tablefound = tables.filter { x_table => x_table.tableAlias_name.toUpperCase() == x_newreg.trace_tableAlias_name.toUpperCase()  }
-          if (tablefound.length > 0) {
+          if (tablefound.nonEmpty) {
             x_newreg.trace_table_name = tablefound(0).table_name
             x_newreg.trace_database_name = tablefound(0).database_name
           } 
         } else {
           //if not found, search in all catalog by column name
           val tableFound = DataFiltered.filter { x_all => x_all.column_name.toUpperCase() == x_newreg.trace_column_name.toUpperCase() }
-          if (tableFound.length > 0) {
+          if (tableFound.nonEmpty) {
             x_newreg.trace_table_name = tableFound(0).table_name
             x_newreg.trace_database_name = tableFound(0).database_name
           }
@@ -697,7 +699,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     * 
     */
     
-    return decode_result
+    decode_result
       
   }
   
@@ -715,15 +717,15 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     //variables to save select fields
     var column = new huemul_sql_columns()
     var table_from = new huemul_sql_tables()
-    var cols_functions: ArrayBuffer[String] = new ArrayBuffer[String]() 
+    val cols_functions: ArrayBuffer[String] = new ArrayBuffer[String]()
     var position_sql_begin: Int = 0  //save position start and end from fields (Select)
     //var position_end: Int = 0
     var select_on_select: huemul_sql_decode_result = null
     
     //clean "." character, is used as database and columns specification.
     val Symbols_adhoc = Symbols.filter { x => x != "." }
-    val search_end_text: ArrayBuffer[String] = new ArrayBuffer[String]() 
-    var CanProcess: Boolean = true
+    val search_end_text: ArrayBuffer[String] = new ArrayBuffer[String]()
+    val CanProcess: Boolean = true
     var parenthesis: Int = 0
     var numOfWords: Int = 0
     
@@ -731,9 +733,9 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     val localWords = Analyze_SQL_RemoveComments(p_words)
     
     
-    var actual_line = -1
+    //var actual_line = -1
     position = 0
-    var position_max: Int = localWords.length
+    val position_max: Int = localWords.length
     while (position < position_max) {
       var word: String = localWords(position).getsymbol.toUpperCase()
       
@@ -790,7 +792,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
           if (stage == "SELECT" && substage == null) {
 
             column = new huemul_sql_columns()
-            var psum = if (word == ",") 1 else 0
+            val psum = if (word == ",") 1 else 0
             position_sql_begin = localWords(position + psum).getpos_start
             substage = "COLUMN"
             numOfWords = 0
@@ -810,7 +812,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
             
             //loop for search in array
             breakable {
-              for (i <- 0 to search_end_text.length-1) {
+              for (i <- search_end_text.indices) {
                 if (search_end_text(i) == word) {
                   pos = i
                   break  
@@ -822,13 +824,13 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
             if (pos >= 0) {
               SentenceIsFound = true
               search_end_text.remove(pos)
-              if (search_end_text.length == 0)
+              if (search_end_text.isEmpty)
                 search_end_bool = false
             }
           } else {
             //search for ""
             val sumbol_key_filter = Symbols_keys.filter { x => x.getsymbol_start.toUpperCase() == word.toUpperCase() && x.getsymbol_isForText  }
-            if (sumbol_key_filter.length > 0) {
+            if (sumbol_key_filter.nonEmpty) {
               SentenceIsFound = true
               
               //if found, add to array
@@ -858,9 +860,9 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               parenthesis -= 1
             
             //search for sql functions
-            if (SentenceIsFound == false)  {
+            if (!SentenceIsFound)  {
               val use_function = SQL_Functions.filter { x => x.toUpperCase() == word.toUpperCase() }
-              if (use_function.length > 0) {
+              if (use_function.nonEmpty) {
                 SentenceIsFound = true
                 cols_functions.append(word)
                 numOfWords += 1
@@ -868,17 +870,17 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
             }
               
             //search for other operations (like +, -, etc)
-            if (SentenceIsFound == false)  {
+            if (!SentenceIsFound)  {
               val _Symbol = Symbols_adhoc.filter { x => x.toUpperCase() == word.toUpperCase() }
-              if (_Symbol.length > 0) {
+              if (_Symbol.nonEmpty) {
                 SentenceIsFound = true  
               }
             }
               
             //search for user symbols
-            if (SentenceIsFound == false) {
+            if (!SentenceIsFound) {
               val _Symbols_user = Symbols_user.filter { x => x.toUpperCase() == word.toUpperCase() }
-              if (_Symbols_user.length > 0) {
+              if (_Symbols_user.nonEmpty) {
                 SentenceIsFound = true
                 numOfWords += 1
               }
@@ -886,7 +888,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
              
             //end of columns (ex: select  table.field as myField, table.field2 as myfield2 FROM
             //                                                 ---                         ---
-            if (search_end_bool == false && position_sql_begin > 0 && (   (word_next == "," && parenthesis == 0) 
+            if (!search_end_bool && position_sql_begin > 0 && (   (word_next == "," && parenthesis == 0)
                                                                         || word_next == "FROM"
                                                                        )) {
               var colName: String = ""
@@ -896,7 +898,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 colName = word
                 
               //if word is the column name and alias at the same time (for example "select column from table"), then add column origin
-              if (column.column_origin.length == 0 && Try(word.toDouble).isFailure && 
+              if (column.column_origin.isEmpty && Try(word.toDouble).isFailure &&
                                        (   numOfWords == 1 
                                     || (word_prev == "SELECT")
                                     || (word_prev == "," && numOfWords == 0)  
@@ -923,13 +925,13 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 stage = null
               }
               
-            } else if (SentenceIsFound == false && search_end_bool == false && word == ".") {
+            } else if (!SentenceIsFound && !search_end_bool && word == ".") {
               val new_reg =  new huemul_sql_columns_origin()
               new_reg.trace_column_name = word_next
               new_reg.trace_tableAlias_name = word_prev
               column.column_origin.append(new_reg)
               numOfWords += 1
-            } else if (SentenceIsFound == false && search_end_bool == false && (word != "." && word_next != "." && word_prev != ".") && Try(word.toDouble).isFailure) {
+            } else if (!SentenceIsFound && !search_end_bool && (word != "." && word_next != "." && word_prev != ".") && Try(word.toDouble).isFailure) {
               val new_reg =  new huemul_sql_columns_origin()
               new_reg.trace_column_name = word
               column.column_origin.append(new_reg)
@@ -948,7 +950,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                 position = res_sel.position
                 
                 var l_subquery_word_01: String = null
-                var l_subquery_word_02: String = null
+                //var l_subquery_word_02: String = null
                   
                 //get next word to 
                 if (position+1 < position_max) {
@@ -1008,7 +1010,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
                     || word_next == "ORDER"
                     || word_next == "GROUP"
                     || word_next == "WHERE"
-                    || Symbols_joins.filter { x => word_next != null && x.toUpperCase() == word_next.toUpperCase() }.length > 0
+                    || Symbols_joins.exists { x => word_next != null && x.toUpperCase() == word_next.toUpperCase() }
                     ) {
                   table_from.tableAlias_name = table_from.table_name
                   
@@ -1040,26 +1042,26 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
             }
             
             //search for sql functions
-            if (SentenceIsFound == false)  {
+            if (!SentenceIsFound)  {
               val use_function = SQL_Functions.filter { x => x.toUpperCase() == word.toUpperCase() }
-              if (use_function.length > 0) {
+              if (use_function.nonEmpty) {
                 SentenceIsFound = true
                 cols_functions.append(word)
               } 
             }
               
             //search for other operations (like +, -, etc)
-            if (SentenceIsFound == false)  {
+            if (!SentenceIsFound)  {
               val _Symbol = Symbols_adhoc.filter { x => x.toUpperCase() == word.toUpperCase() }
-              if (_Symbol.length > 0) {
+              if (_Symbol.nonEmpty) {
                 SentenceIsFound = true  
               }
             }
               
             //search for user symbols
-            if (SentenceIsFound == false) {
+            if (!SentenceIsFound) {
               val _Symbols_user = Symbols_user.filter { x => x.toUpperCase() == word.toUpperCase() }
-              if (_Symbols_user.length > 0) {
+              if (_Symbols_user.nonEmpty) {
                 SentenceIsFound = true
               }
             }
@@ -1068,12 +1070,12 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
               SentenceIsFound = true
             }
              
-            if (SentenceIsFound == false && search_end_bool == false && word == ".") {
+            if (!SentenceIsFound && !search_end_bool && word == ".") {
               val new_reg =  new huemul_sql_columns_origin()
               new_reg.trace_column_name = word_next
               new_reg.trace_tableAlias_name = word_prev
               Result.columns_where.append(new_reg)
-            } else if (SentenceIsFound == false && search_end_bool == false && (word != "." && word_next != "." && word_prev != ".") && Try(word.toDouble).isFailure ) {
+            } else if (!SentenceIsFound && !search_end_bool && (word != "." && word_next != "." && word_prev != ".") && Try(word.toDouble).isFailure ) {
               val new_reg =  new huemul_sql_columns_origin()
               new_reg.trace_column_name = word
               Result.columns_where.append(new_reg)
@@ -1093,10 +1095,16 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       Result = Analyze_SQL_CloseWHERE(Result,TablesAndColumns, Result.tables, position_sql_begin, localWords(position-1).getpos_end, SQL)
     }
     
-    return Result
+    Result
     
   }
-  
+
+  /**
+   * Decode SQL
+   * @param SQL SQL code
+   * @param TablesAndColumns list of tables and columns
+   * @return
+   */
   def decodeSQL(SQL: String, TablesAndColumns: ArrayBuffer[huemul_sql_tables_and_columns] = new ArrayBuffer[huemul_sql_tables_and_columns] ): huemul_sql_decode_result = {
     
     //split words
@@ -1110,7 +1118,7 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
       
       if (x.getsymbol != SQL.substring(x.getpos_start, x.getpos_end)) {
         numErrors += 1
-        println(s"ALERT: ERROR READING IN pos: ${i} line: ${x.getsymbol_line}; Valida:${if (x.getsymbol == SQL.substring(x.getpos_start, x.getpos_end)) "true" else "false" } , word: [${x.getsymbol}], largo: ${x.getsymbol.length()}, Pos Start: ${x.getpos_start}, Pos end: ${x.getpos_end}, comprobar: [${SQL.substring(x.getpos_start, x.getpos_end)}] ")        
+        println(s"ALERT: ERROR READING IN pos: $i line: ${x.getsymbol_line}; Valida:${if (x.getsymbol == SQL.substring(x.getpos_start, x.getpos_end)) "true" else "false" } , word: [${x.getsymbol}], largo: ${x.getsymbol.length()}, Pos Start: ${x.getpos_start}, Pos end: ${x.getpos_end}, comprobar: [${SQL.substring(x.getpos_start, x.getpos_end)}] ")
       }
       
       i += 1
@@ -1121,8 +1129,8 @@ class huemul_SQL_Decode(Symbols_user: ArrayBuffer[String], AutoIncSubQuery: Int 
     res.NumErrors = numErrors
     res.AutoIncSubQuery = numTempSubQuery
     numTempSubQuery += 1
-    res.AliasQuery = s"TEMP_HUEMUL_${numTempSubQuery}"
+    res.AliasQuery = s"TEMP_HUEMUL_$numTempSubQuery"
     res.AliasDatabase = "TEMP_HUEMUL"
-    return res
+    res
   }
 }

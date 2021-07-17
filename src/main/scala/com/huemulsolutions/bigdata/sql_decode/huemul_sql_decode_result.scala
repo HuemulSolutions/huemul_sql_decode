@@ -4,8 +4,8 @@ import scala.collection.mutable._
 //import com.huemulsolutions.bigdata.huemul_sql_decode
 
 class huemul_sql_decode_result extends Serializable {
-  var AliasQuery: String = null
-  var AliasDatabase: String = null
+  var AliasQuery: String = _
+  var AliasDatabase: String = _
   
   var columns: ArrayBuffer[huemul_sql_columns] = new ArrayBuffer[huemul_sql_columns]()
   var columns_where: ArrayBuffer[huemul_sql_columns_origin] = new ArrayBuffer[huemul_sql_columns_origin]()

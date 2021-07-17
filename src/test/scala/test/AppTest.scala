@@ -9,23 +9,23 @@ import scala.collection.mutable._
 class AppTest {
     val TabAndCols: ArrayBuffer[huemul_sql_tables_and_columns] = new ArrayBuffer[huemul_sql_tables_and_columns]()
      
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo3")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo1")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo5")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_no_existe", "campo11")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo7")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_no_existe", "campo10")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_2", "descripcion")) )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo3") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo1") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo5") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_no_existe", "campo11") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo7") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_no_existe", "campo10") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_2", "descripcion") )
       
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_master", "Tablita2", "campo_mae_txt_2")) )
-      TabAndCols.append( (new huemul_sql_tables_and_columns().setData("prod_master", "Tablita2", "id_2")) )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_master", "Tablita2", "campo_mae_txt_2") )
+      TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_master", "Tablita2", "id_2") )
       
       
       var excludeWords:ArrayBuffer[String]  = new ArrayBuffer[String]() 
       val sql_dec: huemul_SQL_Decode = new huemul_SQL_Decode(excludeWords, 1)
       
       
-      val resfinal_query1 = sql_dec.decodeSQL("""SELECT CAMPO1,sum(campo1) as sumatoria, campo2 as rut, id
+      val resfinal_query1: huemul_sql_decode_result = sql_dec.decodeSQL("""SELECT CAMPO1,sum(campo1) as sumatoria, campo2 as rut, id
                               , campo3 nombre, campo4+campo5 *campo7 resultado, "nombre, de persona" texto_nuevo
                ,(SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo10 = campo_1_orig) descripcion_avanzada
                               --, mae.campo_mae_txt
@@ -53,61 +53,61 @@ class AppTest {
                         
     
     @Test
-    def testplan_query01_T001_OK() = assertTrue(testplan_query01_T001)
+    def testplan_query01_T001_OK(): Unit = assertTrue(testplan_query01_T001())
     
     @Test
-    def testplan_query01_T002_OK() = assertTrue(testplan_query01_T002)
+    def testplan_query01_T002_OK(): Unit = assertTrue(testplan_query01_T002())
     
     @Test
-    def testplan_query01_T003_OK() = assertTrue(testplan_query01_T003)
+    def testplan_query01_T003_OK(): Unit = assertTrue(testplan_query01_T003())
     
     @Test
-    def testplan_query01_T004_OK() = assertTrue(testplan_query01_T004)
+    def testplan_query01_T004_OK(): Unit = assertTrue(testplan_query01_T004())
     
     @Test
-    def testplan_query01_T005_OK() = assertTrue(testplan_query01_T005)
+    def testplan_query01_T005_OK(): Unit = assertTrue(testplan_query01_T005())
     
     @Test
-    def testplan_query01_T006_OK() = assertTrue(testplan_query01_T006)
+    def testplan_query01_T006_OK(): Unit = assertTrue(testplan_query01_T006())
     
     @Test
-    def testplan_query01_T007_OK() = assertTrue(testplan_query01_T007)
+    def testplan_query01_T007_OK(): Unit = assertTrue(testplan_query01_T007())
     
     @Test
-    def testplan_query01_T008_OK() = assertTrue(testplan_query01_T008)
+    def testplan_query01_T008_OK(): Unit = assertTrue(testplan_query01_T008())
     
     @Test
-    def testplan_query01_T009_OK() = assertTrue(testplan_query01_T009)
+    def testplan_query01_T009_OK(): Unit = assertTrue(testplan_query01_T009())
     
     @Test
-    def testplan_query01_C001_OK() = assertTrue(testplan_query01_C001)
+    def testplan_query01_C001_OK(): Unit = assertTrue(testplan_query01_C001())
     @Test
-    def testplan_query01_C002_OK() = assertTrue(testplan_query01_C002)
+    def testplan_query01_C002_OK(): Unit = assertTrue(testplan_query01_C002())
     @Test
-    def testplan_query01_C003_OK() = assertTrue(testplan_query01_C003)
+    def testplan_query01_C003_OK(): Unit = assertTrue(testplan_query01_C003())
     @Test
-    def testplan_query01_C004_OK() = assertTrue(testplan_query01_C004)
+    def testplan_query01_C004_OK(): Unit = assertTrue(testplan_query01_C004())
     @Test
-    def testplan_query01_C005_OK() = assertTrue(testplan_query01_C005)
+    def testplan_query01_C005_OK(): Unit = assertTrue(testplan_query01_C005())
     @Test
-    def testplan_query01_C006_OK() = assertTrue(testplan_query01_C006)
+    def testplan_query01_C006_OK(): Unit = assertTrue(testplan_query01_C006())
     @Test
-    def testplan_query01_C007_OK() = assertTrue(testplan_query01_C007)
+    def testplan_query01_C007_OK(): Unit = assertTrue(testplan_query01_C007())
     @Test
-    def testplan_query01_C008_OK() = assertTrue(testplan_query01_C008)
+    def testplan_query01_C008_OK(): Unit = assertTrue(testplan_query01_C008())
     @Test
-    def testplan_query01_C009_OK() = assertTrue(testplan_query01_C009)
+    def testplan_query01_C009_OK(): Unit = assertTrue(testplan_query01_C009())
     @Test
-    def testplan_query01_C010_OK() = assertTrue(testplan_query01_C010)
+    def testplan_query01_C010_OK(): Unit = assertTrue(testplan_query01_C010())
     
     @Test
-    def testplan_query01_SQ_001_T001_OK()= assertTrue(testplan_query01_SQ_001_T001)
+    def testplan_query01_SQ_001_T001_OK(): Unit = assertTrue(testplan_query01_SQ_001_T001())
     @Test
-    def testplan_query01_SQRes_OK()= assertTrue(testplan_query01_SQRes)
+    def testplan_query01_SQRes_OK(): Unit = assertTrue(testplan_query01_SQRes())
     @Test
-    def testplan_query01_SQ_001_T001_C01_OK() = assertTrue(testplan_query01_SQ_001_T001_C01)
+    def testplan_query01_SQ_001_T001_C01_OK(): Unit = assertTrue(testplan_query01_SQ_001_T001_C01())
     @Test
-    def testplan_query01_SQ_001_T001_C02_OK() = assertTrue(testplan_query01_SQ_001_T001_C02)
+    def testplan_query01_SQ_001_T001_C02_OK(): Unit = assertTrue(testplan_query01_SQ_001_T001_C02())
     
     /*********************************************************************************/
     /**************   V A L I D A C I O N   D E   C A M P O S    *********************/
@@ -120,7 +120,7 @@ class AppTest {
         resultado_final = false
         println(s"error: cantidad de filas esperadas en columnas es 10, se obtienen ${resfinal_query1.columns.length}")
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C001(): Boolean = {
@@ -145,7 +145,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(0).column_origin(0).trace_column_name}]/[CAMPO1]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C002(): Boolean = {
@@ -170,7 +170,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(1).column_origin(0).trace_column_name}]/[CAMPO1]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C003(): Boolean = {
@@ -195,7 +195,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(2).column_origin(0).trace_column_name}]/[CAMPO2]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C004(): Boolean = {
@@ -220,7 +220,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(3).column_origin(0).trace_column_name}]/[ID]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C005(): Boolean = {
@@ -245,7 +245,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(4).column_origin(0).trace_column_name}]/[CAMPO3]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C006(): Boolean = {
@@ -294,7 +294,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(5).column_origin(2).trace_column_name}]/[CAMPO7]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C007(): Boolean = {
@@ -302,12 +302,12 @@ class AppTest {
       
       if (!(resfinal_query1.columns(6).column_name == "TEXTO_NUEVO" && 
           resfinal_query1.columns(6).column_sql == """"nombre, de persona" texto_nuevo""" &&
-          resfinal_query1.columns(6).column_origin.length == 0 
+          resfinal_query1.columns(6).column_origin.isEmpty
           )) {
         resultado_final = false
         println(s"""error: tabla(0) campo(6) real/esperado column_name [${resfinal_query1.columns(6).column_name}]/[TEXTO_NUEVO], column_sql [${resfinal_query1.columns(6).column_sql}]/["nombre, de persona" texto_nuevo], column_origin [${resfinal_query1.columns(6).column_origin.length}]/[0]""")
       } 
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C008(): Boolean = {
@@ -332,7 +332,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(7).column_origin(0).trace_column_name}]/[DESCRIPCION]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C009(): Boolean = {
@@ -340,12 +340,12 @@ class AppTest {
       
       if (!(resfinal_query1.columns(8).column_name == "10" && 
           resfinal_query1.columns(8).column_sql == """10""" &&
-          resfinal_query1.columns(8).column_origin.length == 0 
+          resfinal_query1.columns(8).column_origin.isEmpty
           )) {
         resultado_final = false
         println(s"""error: tabla(0) campo(8) real/esperado column_name [${resfinal_query1.columns(8).column_name}]/[10], column_sql [${resfinal_query1.columns(8).column_sql}]/[10], column_origin [${resfinal_query1.columns(8).column_origin.length}]/[0]""")
       } 
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_C010(): Boolean = {
@@ -373,7 +373,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.columns(9).column_origin(0).trace_column_name}]/[CAMPO_MAE_TXT]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     /*********************************************************************************/
@@ -386,7 +386,7 @@ class AppTest {
         resultado_final = false
         println(s"error: cantidad de filas esperadas es 8, se obtienen ${resfinal_query1.tables.length}")
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_T002(): Boolean = {
@@ -398,7 +398,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(0) real/esperado database_name [${resfinal_query1.tables(0).database_name}]/[prod_dim], table_name [${resfinal_query1.tables(0).table_name}]/[TABLA_3], database_name [${resfinal_query1.tables(0).tableAlias_name}]/[T3]")
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_T003(): Boolean = {
@@ -410,7 +410,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(1) real/esperado database_name [${resfinal_query1.tables(1).database_name}]/[PRODUCTION_MASTER], table_name [${resfinal_query1.tables(1).table_name}]/[TBL_DEMO], database_name [${resfinal_query1.tables(1).tableAlias_name}]/[DEMO]")
       }
-      return resultado_final
+      resultado_final
     }
       
     def testplan_query01_T004(): Boolean = {
@@ -422,7 +422,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(2) real/esperado database_name [${resfinal_query1.tables(2).database_name}]/[PRODUCTION_MASTER], table_name [${resfinal_query1.tables(2).table_name}]/[TBL_TRES], database_name [${resfinal_query1.tables(2).tableAlias_name}]/[TBL_TRES]")
       }
-      return resultado_final
+      resultado_final
     }
       
     def testplan_query01_T005(): Boolean = {
@@ -434,7 +434,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(3) real/esperado database_name [${resfinal_query1.tables(3).database_name}]/[null], table_name [${resfinal_query1.tables(3).table_name}]/[TABLAORIGEN], database_name [${resfinal_query1.tables(3).tableAlias_name}]/[ORIG]")
       }
-      return resultado_final
+      resultado_final
     }
       
     def testplan_query01_T006(): Boolean = {
@@ -446,7 +446,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(4) real/esperado database_name [${resfinal_query1.tables(4).database_name}]/[TEMP_HUEMUL], table_name [${resfinal_query1.tables(4).table_name}]/[TEMP_HUEMUL_3], database_name [${resfinal_query1.tables(4).tableAlias_name}]/[OTRA]")
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_T007(): Boolean = {
@@ -458,7 +458,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(5) real/esperado database_name [${resfinal_query1.tables(5).database_name}]/[TEMP_HUEMUL], table_name [${resfinal_query1.tables(5).table_name}]/[TEMP_HUEMUL_5], database_name [${resfinal_query1.tables(5).tableAlias_name}]/[MAE]")
       }
-      return resultado_final
+      resultado_final
     }
       
     def testplan_query01_T008(): Boolean = {
@@ -470,7 +470,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(6) real/esperado database_name [${resfinal_query1.tables(6).database_name}]/[PRODUCTION_DIM], table_name [${resfinal_query1.tables(6).table_name}]/[TBL_LEFT_JOIN], database_name [${resfinal_query1.tables(6).tableAlias_name}]/[TBL_LEFT_JOIN]")
       }
-      return resultado_final
+      resultado_final
     }  
       
     def testplan_query01_T009(): Boolean = {
@@ -482,7 +482,7 @@ class AppTest {
         resultado_final = false
         println(s"error: tabla(7) real/esperado database_name [${resfinal_query1.tables(7).database_name}]/[null], table_name [${resfinal_query1.tables(7).table_name}]/[TBL_FULL_JOIN], database_name [${resfinal_query1.tables(7).tableAlias_name}]/[FJULL]")
       }
-      return resultado_final
+      resultado_final
     }  
     
     
@@ -495,7 +495,7 @@ class AppTest {
         resultado_final = false
         println(s"error: subquery, esperado 2, real ${resfinal_query1.subquery_result.length} ")
       }
-      return resultado_final
+      resultado_final
     }  
     
     def testplan_query01_SQ_001_T001(): Boolean = {
@@ -507,7 +507,7 @@ class AppTest {
         resultado_final = false
         println(s"error: subquery(0) tabla(0) real/esperado database_name [${resfinal_query1.subquery_result(0).tables(0).database_name}]/[null], table_name [${resfinal_query1.subquery_result(0).tables(0).table_name}]/[TABLA3], database_name [${resfinal_query1.subquery_result(0).tables(0).tableAlias_name}]/[TABLA3]")
       }
-      return resultado_final
+      resultado_final
     }  
     
     def testplan_query01_SQ_001_T001_C01(): Boolean = {
@@ -532,7 +532,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.subquery_result(0).columns(0).column_origin(0).trace_column_name}]/[CAMPO1]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
     
     def testplan_query01_SQ_001_T001_C02(): Boolean = {
@@ -557,7 +557,7 @@ class AppTest {
                       trace_column_name [${resfinal_query1.subquery_result(0).columns(1).column_origin(0).trace_column_name}]/[CAMPO2]  """)        
         }
       }
-      return resultado_final
+      resultado_final
     }
 
 }
