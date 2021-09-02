@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.huemulsolutions.bigdata</groupId>
   <artifactId>huemul-sql-decode_2.12</artifactId>
-  <version>1.0</version>
+  <version>3.0.0</version>
   <name>huemul_sql_decode</name>
   <description>Obtiene los campos y tablas utilizados en una sentencia SQL. Dada la siguiente consulta:description
   select campo1 as Id, campo2 as descripcion from Tabla_datos
@@ -74,7 +74,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <scm>
     <connection>https://github.com/HuemulSolutions/huemul_sql_decode.git</connection>
     <developerConnection>https://github.com/HuemulSolutions/huemul_sql_decode.git</developerConnection>

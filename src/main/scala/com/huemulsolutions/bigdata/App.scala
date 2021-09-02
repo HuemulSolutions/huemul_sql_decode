@@ -5,40 +5,40 @@ import scala.collection.mutable._
 
 object App {
 
-  def print_result(resfinal: huemul_sql_decode_result, numciclo: Int) {
-    println(s"RESULTADO CICLO $numciclo ${resfinal.AliasQuery} ***************************************")
+  def print_result(resfinal: HuemulSqlDecodeResult, numciclo: Int) {
+    println(s"RESULTADO CICLO $numciclo ${resfinal.aliasQuery} ***************************************")
     println("************ SQL FROM ************ ")
-    println(resfinal.from_sql)
+    println(resfinal.fromSql)
     println("************ SQL WHERE ************ ")
-    println(resfinal.where_sql)
+    println(resfinal.whereSql)
 
     println("   ")
     println("************ COLUMNS ************ ")
     resfinal.columns.foreach { x =>
-      println (s"*** COLUMN NAME: ${x.column_name}")
-      println (s"    column_sql: ${x.column_sql}")
+      println (s"*** COLUMN NAME: ${x.columnName}")
+      println (s"    column_sql: ${x.columnSql}")
       println ("     columns used:")
-      x.column_origin.foreach { y => println(s"     ---- column_database: ${y.trace_database_name}, trace_table_name: ${y.trace_table_name}, trace_tableAlias_name: ${y.trace_tableAlias_name}, trace_column_name: ${y.trace_column_name}") }
+      x.columnOrigin.foreach { y => println(s"     ---- column_database: ${y.traceDatabaseName}, trace_table_name: ${y.traceTableName}, trace_tableAlias_name: ${y.traceTableAliasName}, trace_column_name: ${y.traceColumnName}") }
     }
 
     println("   ")
     println("************ TABLES ************ ")
-    resfinal.tables.foreach { x => println (s"*** DATABASE NAME: ${x.database_name}, TABLE NAME: ${x.table_name}, ALIAS: ${x.tableAlias_name}") }
+    resfinal.tables.foreach { x => println (s"*** DATABASE NAME: ${x.databaseName}, TABLE NAME: ${x.tableName}, ALIAS: ${x.tableAliasName}") }
 
     println("   ")
     println("************ COLUMNS WHERE ************ ")
-    resfinal.columns_where.foreach { x => println(s"Columns: ${x.trace_column_name}, Table: ${x.trace_table_name}, Database: ${x.trace_database_name}") }
+    resfinal.columnsWhere.foreach { x => println(s"Columns: ${x.traceColumnName}, Table: ${x.traceTableName}, Database: ${x.traceDatabaseName}") }
 
     println("   ")
     println("************ FINAL RESULTS ************ ")
-    println(s"Num Errores: ${resfinal.NumErrors}")
-    println(s"Num subquerys: ${resfinal.subquery_result.length}")
-    println(s"AliasDatabase: ${resfinal.AliasDatabase}")
-    println(s"AliasQuery: ${resfinal.AliasQuery}")
+    println(s"Num Errores: ${resfinal.numErrors}")
+    println(s"Num subquerys: ${resfinal.subQueryResult.length}")
+    println(s"AliasDatabase: ${resfinal.aliasDatabase}")
+    println(s"AliasQuery: ${resfinal.aliasQuery}")
 
 
     var numciclo_2 = numciclo
-    resfinal.subquery_result.foreach { x =>
+    resfinal.subQueryResult.foreach { x =>
       numciclo_2 += 1
       print_result(x,  numciclo_2)
     }
@@ -48,26 +48,26 @@ object App {
   def main(args: Array[String]): Unit = {
     println("Version 1.0")
 
-    val TabAndCols = new ArrayBuffer[huemul_sql_tables_and_columns]
+    val TabAndCols = new ArrayBuffer[HuemulSqlTablesAndColumns]
 
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo3") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo1") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo5") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_no_existe", "campo11") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_3", "campo7") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_no_existe", "campo10") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_dim", "tabla_2", "descripcion") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_3", "campo3") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_3", "campo1") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_3", "campo5") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_no_existe", "campo11") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_3", "campo7") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_no_existe", "campo10") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_dim", "tabla_2", "descripcion") )
 
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_master", "Tablita2", "campo_mae_txt_2") )
-    TabAndCols.append( new huemul_sql_tables_and_columns().setData("prod_master", "Tablita2", "id_2") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_master", "Tablita2", "campo_mae_txt_2") )
+    TabAndCols.append( new HuemulSqlTablesAndColumns().setData("prod_master", "Tablita2", "id_2") )
 
 
     val excludeWords: ArrayBuffer[String] = new ArrayBuffer[String]()
-    val sql_dec: huemul_SQL_Decode = new huemul_SQL_Decode(excludeWords, 1)
+    val sql_dec: HuemulSqlDecode = new HuemulSqlDecode(excludeWords, 1)
     //sql_dec.decode("""SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo1 = campo_1_orig""", TabAndCols)
 
 
-    val resfinal = sql_dec.decodeSQL("""SELECT CAMPO1,sum(campo1) as sumatoria, campo2 as rut, id
+    val resfinal = sql_dec.decodeSql("""SELECT CAMPO1,sum(campo1) as sumatoria, campo2 as rut, id
                             , campo3 nombre, campo4+campo5 *campo7 resultado, "nombre, de persona" texto_nuevo
              ,(SELECT descripcion + ")" + '()' + (10-20) FROM Tabla_2 tab where tab.campo10 = campo_1_orig) descripcion_avanzada
                             --, mae.campo_mae_txt
